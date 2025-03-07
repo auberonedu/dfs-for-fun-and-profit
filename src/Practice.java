@@ -75,7 +75,20 @@ public class Practice {
    */
   //Jameson
   public <T> Set<Vertex<T>> leaves(Vertex<T> vertex) {
-    return null;
+    return leaves(vertex, new HashSet<Vertex<T>>(), new HashSet<Vertex<T>>());
+  } 
+
+  public <T> Set<Vertex<T>> leaves(Vertex<T> vertex, Set<Vertex<T>> visited, Set<Vertex<T>> leaves){
+    if(vertex == null) return leaves;
+    if(visited.contains(vertex)) return leaves; 
+    visited.add(vertex);
+    if(vertex.neighbors.isEmpty()){
+      leaves.add(vertex);
+    }
+    for (var neighbor : vertex.neighbors) {
+      leaves(neighbor, visited, leaves);
+    }
+    return leaves;
   }
 
   /**
@@ -92,7 +105,26 @@ public class Practice {
    * @return True if a strictly increasing path exists, false otherwise.
    * @throws NullPointerException if either start or end is null.
    */
-  public boolean hasStrictlyIncreasingPath(Vertex<Integer> start, Vertex<Integer> end) {
+  public boolean hasStrictlyIncreasingPath(Vertex<Integer> start, Vertex<Integer> end) { 
+    if (start == null || end == null) {
+      throw new NullPointerException("Start or End vertex cannot be null.");
+    }
+    return hasStrictlyIncreasingPath(start, end, new HashSet<>(), Integer.MIN_VALUE);
+  } 
+
+  private boolean hasStrictlyIncreasingPath(Vertex<Integer> current, Vertex<Integer> end, Set<Vertex<Integer>> visited, int prev){
+    if(current == end) {
+      return true;
+    }
+    visited.add(current); 
+
+    for(Vertex<Integer> neighbor : current.neighbors){
+      if (!visited.contains(neighbor) && neighbor.data > prev){
+        if (hasStrictlyIncreasingPath(neighbor, end, visited, neighbor.data)){
+          return true;
+        }
+      }
+    }
     return false;
   }
 }
