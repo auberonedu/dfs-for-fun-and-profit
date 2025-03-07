@@ -1,3 +1,4 @@
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -29,8 +30,23 @@ public class Practice {
    * @param vertex The starting vertex for the traversal.
    * @return A set containing all reachable vertices, or an empty set if vertex is null.
    */
-  public <T> Set<Vertex<T>> reachable(Vertex<T> vertex) {
-    return null;
+  //Jameson
+  public <T> Set<Vertex<T>> reachable(Vertex<T> vertex) { 
+    
+    return reachable(vertex, new HashSet<Vertex<T>>());
+  } 
+
+  public <T> Set<Vertex<T>> reachable(Vertex<T> vertex, Set<Vertex<T>> visited)  {
+    if(vertex == null) return visited;
+    if(visited.contains(vertex)) return visited;
+
+    visited.add(vertex);
+
+    for (var neighbor : vertex.neighbors) {
+      reachable(neighbor, visited);
+    }
+    return visited;
+
   }
 
   /**
@@ -57,6 +73,7 @@ public class Practice {
    * @param vertex The starting vertex for the traversal.
    * @return A set containing all reachable leaf vertices, or an empty set if vertex is null.
    */
+  //Jameson
   public <T> Set<Vertex<T>> leaves(Vertex<T> vertex) {
     return null;
   }
