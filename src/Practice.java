@@ -8,10 +8,12 @@ public class Practice {
 
   /**
    * Prints the value of every vertex reachable from the given starting vertex,
-   * including the starting vertex itself. Each value is printed on a separate line.
+   * including the starting vertex itself. Each value is printed on a separate
+   * line.
    * The order of printing is unimportant.
    *
-   * Each vertex's value should be printed only once, even if it is reachable via multiple paths.
+   * Each vertex's value should be printed only once, even if it is reachable via
+   * multiple paths.
    * It is guaranteed that no two vertices will have the same value.
    *
    * If the given vertex is null, this method prints nothing.
@@ -19,27 +21,26 @@ public class Practice {
    * @param vertex The starting vertex for the traversal.
    */
 
-   //Danny
+  // Danny
   public <T> void printVertexVals(Vertex<T> vertex) {
     printVertexValsHelper(vertex, new HashSet<>());
   }
 
-  public static <T> void printVertexValsHelper(Vertex<T> vertex, Set<Vertex<T>> set){
-    if(vertex == null){
+  public static <T> void printVertexValsHelper(Vertex<T> vertex, Set<Vertex<T>> set) {
+    if (vertex == null) {
       return;
     }
 
-    if(set.contains(vertex)){
+    if (set.contains(vertex)) {
       return;
     }
 
     set.add(vertex);
     System.out.println(vertex.data);
 
-    for(var neighbor : vertex.neighbors){
+    for (var neighbor : vertex.neighbors) {
       printVertexValsHelper(neighbor, set);
     }
-
 
   }
 
@@ -50,17 +51,20 @@ public class Practice {
    * If the given vertex is null, an empty set is returned.
    *
    * @param vertex The starting vertex for the traversal.
-   * @return A set containing all reachable vertices, or an empty set if vertex is null.
+   * @return A set containing all reachable vertices, or an empty set if vertex is
+   *         null.
    */
-  //Jameson
-  public <T> Set<Vertex<T>> reachable(Vertex<T> vertex) { 
-    
-    return reachable(vertex, new HashSet<Vertex<T>>());
-  } 
+  // Jameson
+  public <T> Set<Vertex<T>> reachable(Vertex<T> vertex) {
 
-  public <T> Set<Vertex<T>> reachable(Vertex<T> vertex, Set<Vertex<T>> visited)  {
-    if(vertex == null) return visited;
-    if(visited.contains(vertex)) return visited;
+    return reachable(vertex, new HashSet<Vertex<T>>());
+  }
+
+  public <T> Set<Vertex<T>> reachable(Vertex<T> vertex, Set<Vertex<T>> visited) {
+    if (vertex == null)
+      return visited;
+    if (visited.contains(vertex))
+      return visited;
 
     visited.add(vertex);
 
@@ -72,17 +76,47 @@ public class Practice {
   }
 
   /**
-   * Returns the maximum value among all vertices reachable from the given starting vertex,
+   * Returns the maximum value among all vertices reachable from the given
+   * starting vertex,
    * including the starting vertex itself.
    *
    * If the given vertex is null, the method returns Integer.MIN_VALUE.
    *
    * @param vertex The starting vertex for the traversal.
-   * @return The maximum value of any reachable vertex, or Integer.MIN_VALUE if vertex is null.
+   * @return The maximum value of any reachable vertex, or Integer.MIN_VALUE if
+   *         vertex is null.
    */
-  //Danny
+  // Danny
   public int max(Vertex<Integer> vertex) {
     return -1;
+  }
+
+  public int maxHelper(Vertex<Integer> vertex, Set<Vertex<Integer>> visited) {
+    int max = Integer.MIN_VALUE;
+
+    if (vertex == null) {
+      return max;
+    }
+
+    if (visited.contains(vertex)) {
+      return max;
+    }
+
+    visited.add(vertex);
+
+    for (var neighbor : vertex.neighbors) {
+      if (neighbor.data < max) {
+        max = neighbor.data;
+      }
+
+      int neighbordMax = maxHelper(vertex, visited);
+
+      if (neighbordMax < max) {
+        max = neighbordMax;
+      }
+    }
+
+    return max;
   }
 
   /**
@@ -94,18 +128,21 @@ public class Practice {
    * If the given vertex is null, an empty set is returned.
    *
    * @param vertex The starting vertex for the traversal.
-   * @return A set containing all reachable leaf vertices, or an empty set if vertex is null.
+   * @return A set containing all reachable leaf vertices, or an empty set if
+   *         vertex is null.
    */
-  //Jameson
+  // Jameson
   public <T> Set<Vertex<T>> leaves(Vertex<T> vertex) {
     return leaves(vertex, new HashSet<Vertex<T>>(), new HashSet<Vertex<T>>());
-  } 
+  }
 
-  public <T> Set<Vertex<T>> leaves(Vertex<T> vertex, Set<Vertex<T>> visited, Set<Vertex<T>> leaves){
-    if(vertex == null) return leaves;
-    if(visited.contains(vertex)) return leaves; 
+  public <T> Set<Vertex<T>> leaves(Vertex<T> vertex, Set<Vertex<T>> visited, Set<Vertex<T>> leaves) {
+    if (vertex == null)
+      return leaves;
+    if (visited.contains(vertex))
+      return leaves;
     visited.add(vertex);
-    if(vertex.neighbors.isEmpty()){
+    if (vertex.neighbors.isEmpty()) {
       leaves.add(vertex);
     }
     for (var neighbor : vertex.neighbors) {
@@ -115,16 +152,18 @@ public class Practice {
   }
 
   /**
-   * Determines whether there exists a strictly increasing path from the given start vertex
+   * Determines whether there exists a strictly increasing path from the given
+   * start vertex
    * to the target vertex.
    *
-   * A path is strictly increasing if each visited vertex has a value strictly greater than
+   * A path is strictly increasing if each visited vertex has a value strictly
+   * greater than
    * (not equal to) the previous vertex in the path.
    *
    * If either start or end is null, a NullPointerException is thrown.
    *
    * @param start The starting vertex.
-   * @param end The target vertex.
+   * @param end   The target vertex.
    * @return True if a strictly increasing path exists, false otherwise.
    * @throws NullPointerException if either start or end is null.
    */
