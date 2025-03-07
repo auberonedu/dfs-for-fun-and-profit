@@ -1,4 +1,4 @@
-import java.util.Set;
+import java.util.*;
 
 /**
  * A utility class providing various graph traversal methods using DFS.
@@ -18,6 +18,20 @@ public class Practice {
    * @param vertex The starting vertex for the traversal.
    */
   public <T> void printVertexVals(Vertex<T> vertex) {
+    if (vertex == null) return;
+
+    dfs(vertex, new HashSet<>());
+  }
+
+  private <T> void dfs(Vertex<T> vertex, Set<Vertex<T>> visited) {
+    if (visited.contains(vertex)) return;
+
+    System.out.println(vertex.data);
+    visited.add(vertex);
+
+    for (var neighbor : vertex.neighbors) {
+      dfs(neighbor, visited);
+    }
   }
 
   /**
@@ -30,7 +44,10 @@ public class Practice {
    * @return A set containing all reachable vertices, or an empty set if vertex is null.
    */
   public <T> Set<Vertex<T>> reachable(Vertex<T> vertex) {
-    return null;
+    Set<Vertex<T>> visited = new HashSet<Vertex<T>>();
+
+    if (vertex != null) dfs(vertex, visited); 
+    return visited;
   }
 
   /**
@@ -43,7 +60,21 @@ public class Practice {
    * @return The maximum value of any reachable vertex, or Integer.MIN_VALUE if vertex is null.
    */
   public int max(Vertex<Integer> vertex) {
-    return -1;
+    if (vertex == null) return Integer.MIN_VALUE;
+    
+    return dfsMax(vertex, new HashSet<>());
+  }
+
+  private int dfsMax(Vertex<Integer> vertex, Set<Vertex<Integer>> visited) {
+    if (visited.contains(vertex)) return Integer.MIN_VALUE;
+
+    visited.add(vertex);
+    int maxVal = vertex.data;
+
+    for (Vertex<Integer> neighbor : vertex.neighbors) {
+      maxVal = Math.max(maxVal, dfsMax(neighbor, visited));
+    }
+    return maxVal;
   }
 
   /**
@@ -58,7 +89,22 @@ public class Practice {
    * @return A set containing all reachable leaf vertices, or an empty set if vertex is null.
    */
   public <T> Set<Vertex<T>> leaves(Vertex<T> vertex) {
-    return null;
+    Set<Vertex<T>> leafSet = new HashSet<>();
+    if(vertex != null) dfsFindLeaves(vertex, new HashSet<>(), leafSet);
+    return leafSet;
+  }
+  public <T> void dfsFindLeaves(Vertex<T> vertex, Set<Vertex<T>> visited, Set<Vertex<T>> leafSet) {
+    if(visited.contains(vertex)) return;
+
+    visited.add(vertex);
+
+    if(vertex.neighbors.isEmpty()) {
+      leafSet.add(vertex);
+    } else {
+      for (Vertex<T> neighbor : vertex.neighbors) {
+        dfsFindLeaves(neighbor, visited, leafSet);
+      }
+    }
   }
 
   /**
@@ -76,6 +122,22 @@ public class Practice {
    * @throws NullPointerException if either start or end is null.
    */
   public boolean hasStrictlyIncreasingPath(Vertex<Integer> start, Vertex<Integer> end) {
+    if(start == null || end == null) throw new NullPointerException();
+
+    return dfs(start, end, start.data, new HashSet<>());
+  }
+
+  public boolean dfs(Vertex<Integer> current, Vertex<Integer> end, int prevValue, Set<Vertex<Integer>> visited) {
+    if(current == end) return true;
+    visited.add(current);
+
+    for (Vertex<Integer> neighbor : current.neighbors) {
+      if(!visited.contains(neighbor) && neighbor.data > prevValue) {
+        if(dfs(neighbor, end, neighbor.data, visited)) {
+          return true;
+        }
+      }
+    }
     return false;
   }
 }
