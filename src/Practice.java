@@ -52,8 +52,23 @@ public class Practice {
    * @param vertex The starting vertex for the traversal.
    * @return A set containing all reachable vertices, or an empty set if vertex is null.
    */
-  public <T> Set<Vertex<T>> reachable(Vertex<T> vertex) {
-    return null;
+  //Jameson
+  public <T> Set<Vertex<T>> reachable(Vertex<T> vertex) { 
+    
+    return reachable(vertex, new HashSet<Vertex<T>>());
+  } 
+
+  public <T> Set<Vertex<T>> reachable(Vertex<T> vertex, Set<Vertex<T>> visited)  {
+    if(vertex == null) return visited;
+    if(visited.contains(vertex)) return visited;
+
+    visited.add(vertex);
+
+    for (var neighbor : vertex.neighbors) {
+      reachable(neighbor, visited);
+    }
+    return visited;
+
   }
 
   /**
@@ -81,8 +96,22 @@ public class Practice {
    * @param vertex The starting vertex for the traversal.
    * @return A set containing all reachable leaf vertices, or an empty set if vertex is null.
    */
+  //Jameson
   public <T> Set<Vertex<T>> leaves(Vertex<T> vertex) {
-    return null;
+    return leaves(vertex, new HashSet<Vertex<T>>(), new HashSet<Vertex<T>>());
+  } 
+
+  public <T> Set<Vertex<T>> leaves(Vertex<T> vertex, Set<Vertex<T>> visited, Set<Vertex<T>> leaves){
+    if(vertex == null) return leaves;
+    if(visited.contains(vertex)) return leaves; 
+    visited.add(vertex);
+    if(vertex.neighbors.isEmpty()){
+      leaves.add(vertex);
+    }
+    for (var neighbor : vertex.neighbors) {
+      leaves(neighbor, visited, leaves);
+    }
+    return leaves;
   }
 
   /**
@@ -99,8 +128,6 @@ public class Practice {
    * @return True if a strictly increasing path exists, false otherwise.
    * @throws NullPointerException if either start or end is null.
    */
-
-   //Danny
   public boolean hasStrictlyIncreasingPath(Vertex<Integer> start, Vertex<Integer> end) {
     return false;
   }
