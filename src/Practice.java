@@ -162,19 +162,23 @@ public class Practice {
   }
 
   private boolean hasStrictlyIncreasingPathHelper(Vertex<Integer> current, Vertex<Integer> end, Set<Vertex<Integer>> visited, int lastVal) {
-    if (visited.contains(current)) return false; 
+    if (current == null) return false;
 
-    visited.add(current); 
+    if (visited.contains(current)) return false; 
+    
+    if (current.data <= lastVal) return false;
 
     if (current == end) return true; 
 
+    visited.add(current); 
+
     for (Vertex<Integer> neighbor : current.neighbors) {
-      if (neighbor.data > lastVal) {  
-        if (hasStrictlyIncreasingPathHelper(neighbor, end, visited, current.data)) {
-          return true;
-        }
+      if (neighbor.data > lastVal) {
+          if (hasStrictlyIncreasingPathHelper(neighbor, end, visited, current.data)) {
+              return true;
+          }
       }
-    }
+  }
     return false; 
   }
 }
