@@ -43,7 +43,25 @@ public class Practice {
    * @return The maximum value of any reachable vertex, or Integer.MIN_VALUE if vertex is null.
    */
   public int max(Vertex<Integer> vertex) {
-    return -1;
+    if (vertex == null) {
+      return Integer.MIN_VALUE;
+    }
+  }
+
+  public static <T> void maxHelper(Vertex<T> vertex, Set<Vertex<T>> visited) {
+    if (vertex == null) return;
+    if (visited.contains(vertex)) return;
+
+    visited.add(vertex);
+    System.out.println(vertex.data);
+
+    if (vertex.neighbors ==  null) return;
+
+    for (var vertex.neighbor == null) return;
+
+    for (var neighbor : vertex.neighbors) {
+      maxHelper(neighbor, visited);
+    }
   }
 
   /**
