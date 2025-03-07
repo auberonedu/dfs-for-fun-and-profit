@@ -1,3 +1,4 @@
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -17,7 +18,29 @@ public class Practice {
    *
    * @param vertex The starting vertex for the traversal.
    */
+
+   //Danny
   public <T> void printVertexVals(Vertex<T> vertex) {
+    printVertexValsHelper(vertex, new HashSet<>());
+  }
+
+  public static <T> void printVertexValsHelper(Vertex<T> vertex, Set<Vertex<T>> set){
+    if(vertex == null){
+      return;
+    }
+
+    if(set.contains(vertex)){
+      return;
+    }
+
+    set.add(vertex);
+    System.out.println(vertex.data);
+
+    for(var neighbor : vertex.neighbors){
+      printVertexValsHelper(neighbor, set);
+    }
+
+
   }
 
   /**
@@ -42,6 +65,7 @@ public class Practice {
    * @param vertex The starting vertex for the traversal.
    * @return The maximum value of any reachable vertex, or Integer.MIN_VALUE if vertex is null.
    */
+  //Danny
   public int max(Vertex<Integer> vertex) {
     return -1;
   }
@@ -75,6 +99,8 @@ public class Practice {
    * @return True if a strictly increasing path exists, false otherwise.
    * @throws NullPointerException if either start or end is null.
    */
+
+   //Danny
   public boolean hasStrictlyIncreasingPath(Vertex<Integer> start, Vertex<Integer> end) {
     return false;
   }
