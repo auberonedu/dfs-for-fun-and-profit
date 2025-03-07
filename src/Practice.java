@@ -1,3 +1,4 @@
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -18,6 +19,20 @@ public class Practice {
    * @param vertex The starting vertex for the traversal.
    */
   public <T> void printVertexVals(Vertex<T> vertex) {
+    if (vertex == null) return;
+    printVertexValsHelper(vertex, new HashSet<Vertex<T>>());
+  }
+
+  private <T> void printVertexValsHelper(Vertex<T> vertex, Set<Vertex<T>> visited) {
+    if (vertex == null) return;
+    if (visited.contains(vertex)) return;
+
+    visited.add(vertex);
+    System.out.println(vertex.data);
+
+    for (Vertex<T> neighbor : vertex.neighbors) {
+      printVertexValsHelper(neighbor, visited);
+    }
   }
 
   /**
@@ -30,7 +45,24 @@ public class Practice {
    * @return A set containing all reachable vertices, or an empty set if vertex is null.
    */
   public <T> Set<Vertex<T>> reachable(Vertex<T> vertex) {
-    return null;
+    if (vertex == null) {
+      return new HashSet<>();
+    }
+
+    Set<Vertex<T>> visited = new HashSet<Vertex<T>>();
+    reachableHelper(vertex, visited);
+    
+    return visited;
+  }
+  
+  private <T> void reachableHelper(Vertex<T> vertex, Set<Vertex<T>> visited) {
+    if (visited.contains(vertex)) return; 
+
+    visited.add(vertex); 
+    
+    for (Vertex<T> neighbor : vertex.neighbors) {
+      reachableHelper(neighbor, visited); 
+    }
   }
 
   /**
