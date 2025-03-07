@@ -88,7 +88,7 @@ public class Practice {
    */
   // Danny
   public int max(Vertex<Integer> vertex) {
-    return -1;
+    return maxHelper(vertex, new HashSet<>());
   }
 
   public int maxHelper(Vertex<Integer> vertex, Set<Vertex<Integer>> visited) {
@@ -105,13 +105,13 @@ public class Practice {
     visited.add(vertex);
 
     for (var neighbor : vertex.neighbors) {
-      if (neighbor.data < max) {
+      if (neighbor.data > max) {
         max = neighbor.data;
       }
 
-      int neighbordMax = maxHelper(vertex, visited);
+      int neighbordMax = maxHelper(neighbor, visited);
 
-      if (neighbordMax < max) {
+      if (neighbordMax > max) {
         max = neighbordMax;
       }
     }
