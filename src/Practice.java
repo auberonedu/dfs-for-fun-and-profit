@@ -18,6 +18,14 @@ public class Practice {
    * @param vertex The starting vertex for the traversal.
    */
   public <T> void printVertexVals(Vertex<T> vertex) {
+    if (vertex == null) {
+      return;
+    }
+
+    System.out.println(vertex.data);
+    for (Vertex<T> neigbor : vertex.neighbors) {
+      printVertexVals(neigbor);
+    }
   }
 
   /**
