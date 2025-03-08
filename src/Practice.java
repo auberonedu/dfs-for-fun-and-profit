@@ -114,8 +114,31 @@ public class Practice {
    * @return A set containing all reachable leaf vertices, or an empty set if vertex is null.
    */
   public <T> Set<Vertex<T>> leaves(Vertex<T> vertex) {
-    return null;
+    if (vertex == null) {
+      return new HashSet<>();
+    }
+
+    Set<Vertex<T>> visited = new HashSet<>();
+    Set<Vertex<T>> leaves = new HashSet<>();
+    leavesHelper(vertex, visited, leaves);
+
+    return leaves;
   }
+
+  private <T> void leavesHelper(Vertex<T> vertex, Set<Vertex<T>> visited, Set<Vertex<T>> leaves) {
+
+    if (vertex == null) return;
+
+    visited.add(vertex);
+
+    if (vertex.neighbors.isEmpty()) {
+      leaves.add(vertex);
+    }
+
+    for (Vertex<T> neighbor : vertex.neighbors) {
+      leavesHelper(neighbor, visited, leaves);
+    }
+  }     
 
   /**
    * Determines whether there exists a strictly increasing path from the given start vertex
