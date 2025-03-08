@@ -1,4 +1,5 @@
 import java.util.Set;
+import java.util.HashSet;
 
 /**
  * A utility class providing various graph traversal methods using DFS.
@@ -18,6 +19,19 @@ public class Practice {
    * @param vertex The starting vertex for the traversal.
    */
   public <T> void printVertexVals(Vertex<T> vertex) {
+    // if (vertex == null) return;
+    printVertexVals(vertex, new HashSet<Vertex<T>>());
+  }
+
+  private <T> void printVertexVals(Vertex<T> vertex, HashSet<Vertex<T>> record) {
+    if (vertex == null) return;
+    if (record.contains(vertex)) return;
+    record.add(vertex);
+    System.out.println(vertex.data);
+
+    for (var neighbor: vertex.neighbors) {
+      printVertexVals(neighbor, record);
+    }
   }
 
   /**
@@ -30,7 +44,18 @@ public class Practice {
    * @return A set containing all reachable vertices, or an empty set if vertex is null.
    */
   public <T> Set<Vertex<T>> reachable(Vertex<T> vertex) {
-    return null;
+    return reachable(vertex, new HashSet<Vertex<T>>());
+  }
+
+  private <T> HashSet<Vertex<T>> reachable(Vertex<T> vertex, HashSet<Vertex<T>> record) {
+    if (vertex == null) return record;
+    if (record.contains(vertex)) return record;
+    record.add(vertex);
+
+    for (var neighbor: vertex.neighbors) {
+      reachable(neighbor, record);
+    }
+    return record;
   }
 
   /**
@@ -43,7 +68,22 @@ public class Practice {
    * @return The maximum value of any reachable vertex, or Integer.MIN_VALUE if vertex is null.
    */
   public int max(Vertex<Integer> vertex) {
-    return -1;
+    int max = Integer.MIN_VALUE;
+    return max(vertex, max, new HashSet<Vertex<Integer>>());
+  }
+
+  private int max(Vertex<Integer> vertex, int max, HashSet<Vertex<Integer>> record) {
+    if (vertex == null) return max;
+    if (record.contains(vertex)) return max;
+    record.add(vertex);
+
+    max = Math.max(max, vertex.data);
+
+    for (var neighbor: vertex.neighbors) {
+      max = Math.max(max, max(neighbor, max, record));
+    }
+
+    return max;
   }
 
   /**
@@ -58,8 +98,22 @@ public class Practice {
    * @return A set containing all reachable leaf vertices, or an empty set if vertex is null.
    */
   public <T> Set<Vertex<T>> leaves(Vertex<T> vertex) {
-    return null;
+    return leaves(vertex, new HashSet<Vertex<T>>(), new HashSet<Vertex<T>>());
   }
+
+  public <T> Set<Vertex<T>> leaves(Vertex<T> vertex, HashSet<Vertex<T>> record, HashSet<Vertex<T>> leaves) {
+    if (vertex == null) return leaves;
+    if (record.contains(vertex)) return leaves;
+    record.add(vertex);
+
+    if (vertex.neighbors.isEmpty()) { leaves.add(vertex);};
+
+    for (var neighbor: vertex.neighbors) {
+      leaves(neighbor, record, leaves);
+    }
+    return leaves;
+  }
+
 
   /**
    * Determines whether there exists a strictly increasing path from the given start vertex
@@ -76,6 +130,31 @@ public class Practice {
    * @throws NullPointerException if either start or end is null.
    */
   public boolean hasStrictlyIncreasingPath(Vertex<Integer> start, Vertex<Integer> end) {
-    return false;
+    if (start == null || end == null) {
+      throw new NullPointerException("start or end is null");
+    }
+
+    if (start.equals(end)) return true;
+
+    if (start.data >= end.data) return false;
+
+    boolean strictlyIncreasing = false;
+
+    return hasStrictlyIncreasingPath(start, end, new HashSet<Vertex<Integer>>(), strictlyIncreasing);
+  }
+
+  public boolean hasStrictlyIncreasingPath(Vertex<Integer> current, Vertex<Integer> end, HashSet<Vertex<Integer>> record, boolean strictlyIncreasing) {
+    if (current == null) return strictlyIncreasing;
+    if (record.contains(current)) return strictlyIncreasing;
+    record.add(current);
+    if (current.equals(end)) return true;
+
+    for (var neighbor: current.neighbors) {
+      if (current.data < neighbor.data) {
+        strictlyIncreasing = hasStrictlyIncreasingPath(neighbor, end, record, strictlyIncreasing);
+      }
+    }
+
+    return strictlyIncreasing;
   }
 }
