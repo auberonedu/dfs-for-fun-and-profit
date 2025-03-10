@@ -15,6 +15,7 @@ public class Practice {
    *
    * If the given vertex is null, this method prints nothing.
    *
+   * 
    * @param vertex The starting vertex for the traversal.
    */
   public <T> void printVertexVals(Vertex<T> vertex) {
