@@ -119,26 +119,24 @@ public class Practice {
     stack.push(vertex);
     Set<Vertex<T>> leafs = new HashSet<>();
 
-      while(!stack.isEmpty()){
-        Vertex<T> current = stack.pop();
-        if(!visited.contains(current)){
-          visited.add(current);
+    while(!stack.isEmpty()){
+      Vertex<T> current = stack.pop();
+      if(!visited.contains(current)){
+        visited.add(current);
 
-          if (current.neighbors == null || current.neighbors.isEmpty()) {
-            leafs.add(current);
-          } else {
-            for(Vertex<T> neighbor : current.neighbors){
-              if (!visited.contains(neighbor)) {
-                stack.push(neighbor);
-              }
+        if (current.neighbors == null || current.neighbors.isEmpty()) {
+          leafs.add(current);
+        } else {
+          for(Vertex<T> neighbor : current.neighbors){
+            if (!visited.contains(neighbor)) {
+              stack.push(neighbor);
             }
           }
         }
       }
+    }
     return leafs;
   }
-
-
 
   /**
    * Determines whether there exists a strictly increasing path from the given start vertex
@@ -155,6 +153,24 @@ public class Practice {
    * @throws NullPointerException if either start or end is null.
    */
   public boolean hasStrictlyIncreasingPath(Vertex<Integer> start, Vertex<Integer> end) {
+    if (start == null || end == null) throw new NullPointerException();
+    Stack<Vertex<Integer>> stack = new Stack<>();
+    stack.push(start);
+    Set<Vertex<Integer>> visited = new HashSet<>();
+
+    while(!stack.isEmpty()){
+      Vertex<Integer> current = stack.pop();
+      if (current.equals(end)) return true;
+      if(!visited.contains(current)){
+        visited.add(current);
+
+        for(Vertex<Integer> neighbor : current.neighbors){
+          if (neighbor.data > current.data) {
+            stack.push(neighbor);
+          }
+        }
+      }
+    }
     return false;
   }
 }
