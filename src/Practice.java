@@ -115,8 +115,28 @@ private int max(Vertex<Integer> vertex, Set<Vertex<Integer>> visited) {
    * @return A set containing all reachable leaf vertices, or an empty set if vertex is null.
    */
   public <T> Set<Vertex<T>> leaves(Vertex<T> vertex) {
-    return null;
+    Set<Vertex<T>> leafSet = new HashSet<>();
+    if (vertex == null) {
+      return leafSet;
+    }
+    leaves(vertex, new HashSet<>(), leafSet);
+    return leafSet;
   }
+
+  private <T> void leaves(Vertex<T> vertex, Set<Vertex<T>> visited, Set<Vertex<T>> leafSet) {
+    if (vertex == null || visited.contains(vertex)) {
+      return;
+    }
+    visited.add(vertex);
+    if (vertex.neighbors == null || vertex.neighbors.isEmpty()) {
+      leafSet.add(vertex);
+    } else {
+      for (var neighbor : vertex.neighbors) {
+        leaves(neighbor, visited, leafSet);
+      }
+    }
+  }
+
 
   /**
    * Determines whether there exists a strictly increasing path from the given start vertex
@@ -133,6 +153,28 @@ private int max(Vertex<Integer> vertex, Set<Vertex<Integer>> visited) {
    * @throws NullPointerException if either start or end is null.
    */
   public boolean hasStrictlyIncreasingPath(Vertex<Integer> start, Vertex<Integer> end) {
+    if (start == null || end == null) {
+      throw new NullPointerException("Start and end vertices must not be null.");
+    }
+    Set<Vertex<Integer>> visited = new HashSet<>();
+    return hasStrictlyIncreasingPath(start, end, visited);
+  }
+  
+  private boolean hasStrictlyIncreasingPath(Vertex<Integer> current, Vertex<Integer> target, Set<Vertex<Integer>> visited) {
+    if (current.equals(target)) {
+      return true;
+    }
+    visited.add(current);
+    
+    if (current.neighbors != null) {
+      for (var neighbor : current.neighbors) {
+        if (!visited.contains(neighbor) && neighbor.data > current.data) {
+          if (hasStrictlyIncreasingPath(neighbor, target, visited)) {
+            return true;
+          }
+        }
+      }
+    }
     return false;
   }
 }
