@@ -1,5 +1,6 @@
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
 
 /**
  * A utility class providing various graph traversal methods using DFS.
@@ -46,8 +47,28 @@ public class Practice {
    * @return A set containing all reachable vertices, or an empty set if vertex is null.
    */
   public <T> Set<Vertex<T>> reachable(Vertex<T> vertex) {
-    return null;
+    Set<Vertex<T>> visited = new HashSet<>();
+    if (vertex == null) return visited;
+
+    Stack<Vertex<T>> stack = new Stack<>();
+    stack.push(vertex);
+
+    while(!stack.isEmpty()){
+      Vertex<T> current = stack.pop();
+      if(!visited.contains(current)){
+        visited.add(current);
+
+        for(Vertex<T> neighbor : current.neighbors){
+          stack.push(neighbor);
+        }
+      }
+    }
+    return visited;
   }
+
+  // private static <T> void reachable(Vertex<T> vertex, Set<Vertex<T>> visited) {
+  //   if(visited.contains(vertex))
+  // }
 
   /**
    * Returns the maximum value among all vertices reachable from the given starting vertex,
