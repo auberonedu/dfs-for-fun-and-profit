@@ -66,10 +66,6 @@ public class Practice {
     return visited;
   }
 
-  // private static <T> void reachable(Vertex<T> vertex, Set<Vertex<T>> visited) {
-  //   if(visited.contains(vertex))
-  // }
-
   /**
    * Returns the maximum value among all vertices reachable from the given starting vertex,
    * including the starting vertex itself.
