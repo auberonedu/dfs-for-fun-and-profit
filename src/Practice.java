@@ -1,3 +1,4 @@
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -18,6 +19,21 @@ public class Practice {
    * @param vertex The starting vertex for the traversal.
    */
   public <T> void printVertexVals(Vertex<T> vertex) {
+    printVertexVals(vertex, new HashSet<Vertex<T>>());
+  }
+  
+  public <T> void printVertexVals(Vertex<T> vertex, Set<Vertex<T>> visited) {
+    if (vertex == null) return;
+    if (visited.contains(vertex)) return;
+    
+    visited.add(vertex);
+    System.out.println(vertex.data);
+
+    if (vertex.neighbors == null) return;
+
+    for (Vertex<T> neighbor : vertex.neighbors) {
+      printVertexVals(neighbor, visited);
+    }
   }
 
   /**
@@ -30,7 +46,20 @@ public class Practice {
    * @return A set containing all reachable vertices, or an empty set if vertex is null.
    */
   public <T> Set<Vertex<T>> reachable(Vertex<T> vertex) {
-    return null;
+    Set<Vertex<T>> reachableVertices = new HashSet<>();
+    reachableHelper(vertex, reachableVertices);
+    return reachableVertices;
+  }
+
+  public <T> void reachableHelper(Vertex<T> vertex, Set<Vertex<T>> visited) {
+    if (vertex == null) return;
+    if (visited.contains(vertex)) return;
+
+    visited.add(vertex);
+    
+    for (Vertex<T> neighbor : vertex.neighbors) {
+      reachableHelper(neighbor, visited);
+    }
   }
 
   /**
@@ -43,7 +72,24 @@ public class Practice {
    * @return The maximum value of any reachable vertex, or Integer.MIN_VALUE if vertex is null.
    */
   public int max(Vertex<Integer> vertex) {
-    return -1;
+    if (vertex == null) return Integer.MIN_VALUE;
+    return maxHelper(vertex, new HashSet<Vertex<Integer>>());
+  }
+  
+  public int maxHelper(Vertex<Integer> vertex, Set<Vertex<Integer>> visited) {
+    if (vertex == null) return Integer.MIN_VALUE;
+    if (visited.contains(vertex)) return Integer.MIN_VALUE;
+
+    visited.add(vertex);
+
+    int maxValue = vertex.data;
+
+    for (Vertex<Integer> neighbor : vertex.neighbors) {
+      int neighborMaxValue = maxHelper(neighbor, visited);
+      maxValue = Math.max(maxValue, neighborMaxValue);
+    }
+
+    return maxValue;
   }
 
   /**
