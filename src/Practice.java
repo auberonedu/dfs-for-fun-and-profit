@@ -112,8 +112,33 @@ public class Practice {
    * @return A set containing all reachable leaf vertices, or an empty set if vertex is null.
    */
   public <T> Set<Vertex<T>> leaves(Vertex<T> vertex) {
-    return null;
+    Set<Vertex<T>> visited = new HashSet<>();
+    if (vertex == null) return visited;
+
+    Stack<Vertex<T>> stack = new Stack<>();
+    stack.push(vertex);
+    Set<Vertex<T>> leafs = new HashSet<>();
+
+      while(!stack.isEmpty()){
+        Vertex<T> current = stack.pop();
+        if(!visited.contains(current)){
+          visited.add(current);
+
+          if (current.neighbors == null || current.neighbors.isEmpty()) {
+            leafs.add(current);
+          } else {
+            for(Vertex<T> neighbor : current.neighbors){
+              if (!visited.contains(neighbor)) {
+                stack.push(neighbor);
+              }
+            }
+          }
+        }
+      }
+    return leafs;
   }
+
+
 
   /**
    * Determines whether there exists a strictly increasing path from the given start vertex
