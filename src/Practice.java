@@ -1,3 +1,4 @@
+import com.sun.jdi.Value;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
@@ -76,7 +77,27 @@ public class Practice {
    * @return The maximum value of any reachable vertex, or Integer.MIN_VALUE if vertex is null.
    */
   public int max(Vertex<Integer> vertex) {
-    return -1;
+    if (vertex == null) return Integer.MIN_VALUE;
+
+    Set<Vertex<Integer>> visited = new HashSet<>();
+    Stack<Vertex<Integer>> stack = new Stack<>();
+    stack.push(vertex);
+
+    int maxVal = Integer.MIN_VALUE;
+    while (!stack.isEmpty()) {
+      Vertex<Integer> current = stack.pop();
+      if (!visited.contains(current)) {
+        visited.add(current);
+        maxVal = Math.max(maxVal, current.data);
+
+        for (Vertex<Integer> neighbor : current.neighbors) {
+          if (!visited.contains(neighbor)) {
+            stack.push(neighbor);
+          }
+        }
+      }
+    }
+    return maxVal;
   }
 
   /**
