@@ -60,7 +60,28 @@ public class Practice {
    *         null.
    */
   public <T> Set<Vertex<T>> reachable(Vertex<T> vertex) {
-    return null;
+    if(vertex == null){
+
+    return new HashSet<>();
+    }
+
+
+    Set<Vertex<T>> visited = new HashSet<>();
+    reachableHelper(vertex, visited);
+    return visited;
+  }
+
+  public <T> void reachableHelper(Vertex<T> vertex, Set<Vertex<T>> visited){
+    if(visited.contains(vertex)){
+      return;
+    }
+
+    visited.add(vertex);
+
+    for(var neighbor : vertex.neighbors){
+      reachableHelper(neighbor, visited);
+    }
+
   }
 
   /**
@@ -75,7 +96,31 @@ public class Practice {
    *         vertex is null.
    */
   public int max(Vertex<Integer> vertex) {
-    return -1;
+    if(vertex == null){
+      return Integer.MIN_VALUE;
+    }
+
+    Set<Vertex<Integer>> visited = new HashSet<>();
+    int highest = vertex.data;
+    return maxHelper(vertex, visited, highest);
+  }
+
+  public int maxHelper(Vertex<Integer> vertex, Set<Vertex<Integer>> visited, int highest){
+    if(visited.contains(vertex)){
+      return Integer.MIN_VALUE;
+    }
+
+    visited.add(vertex);
+    if(vertex.data > highest){
+      highest = vertex.data;
+    }
+
+    for(var neighbor : vertex.neighbors){
+      highest = Math.max(highest, maxHelper(neighbor, visited, highest));
+    }
+
+    return highest;
+    
   }
 
   /**
