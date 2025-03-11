@@ -55,7 +55,30 @@ public class Practice {
    * @return A set containing all reachable vertices, or an empty set if vertex is null.
    */
   public <T> Set<Vertex<T>> reachable(Vertex<T> vertex) {
-    return null;
+    Set<Vertex<T>> visited = new HashSet<>(); // Set to store the reachable vertices
+    if (vertex == null) return visited; // If null, return the visited vertex;
+    
+    Stack<Vertex<T>> stack = new Stack<>(); // Stack for DFS traversal
+    stack.push(vertex); // Stack traversal from the given vertex
+
+    // Continue to traverse through the reachable vertices
+    while(!stack.isEmpty()) {
+      // Get the next vertex, by setting a pointer
+      Vertex<T> current = stack.pop();
+
+      // if not visited add the next vertex
+      if (!visited.contains(current)) {
+        
+        visited.add(current);
+
+        // Push all the neighbors to the stack
+        for (Vertex<T> neighbor : current.neighbors) {
+          stack.push(neighbor);
+        }
+      }
+    }
+
+    return visited;
   }
 
   /**
