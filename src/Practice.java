@@ -1,4 +1,7 @@
+import com.sun.jdi.Value;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
 
 /**
  * A utility class providing various graph traversal methods using DFS.
@@ -18,6 +21,21 @@ public class Practice {
    * @param vertex The starting vertex for the traversal.
    */
   public <T> void printVertexVals(Vertex<T> vertex) {
+    if (vertex == null) return;
+
+    Set<Vertex<T>> visited = new HashSet<>();
+    printVertexVals(vertex, visited);
+  }
+
+  private <T> void printVertexVals(Vertex<T> vertex, Set<Vertex<T>> visited) {
+    if (vertex == null || visited.contains(vertex)) return;
+
+    System.out.println(vertex.data);
+    visited.add(vertex);
+
+    for (Vertex<T> neighbor : vertex.neighbors) {
+      printVertexVals(neighbor, visited);
+    }
   }
 
   /**
@@ -30,7 +48,23 @@ public class Practice {
    * @return A set containing all reachable vertices, or an empty set if vertex is null.
    */
   public <T> Set<Vertex<T>> reachable(Vertex<T> vertex) {
-    return null;
+    Set<Vertex<T>> visited = new HashSet<>();
+    if (vertex == null) return visited;
+
+    Stack<Vertex<T>> stack = new Stack<>();
+    stack.push(vertex);
+
+    while(!stack.isEmpty()){
+      Vertex<T> current = stack.pop();
+      if(!visited.contains(current)){
+        visited.add(current);
+
+        for(Vertex<T> neighbor : current.neighbors){
+          stack.push(neighbor);
+        }
+      }
+    }
+    return visited;
   }
 
   /**
@@ -43,7 +77,27 @@ public class Practice {
    * @return The maximum value of any reachable vertex, or Integer.MIN_VALUE if vertex is null.
    */
   public int max(Vertex<Integer> vertex) {
-    return -1;
+    if (vertex == null) return Integer.MIN_VALUE;
+
+    Set<Vertex<Integer>> visited = new HashSet<>();
+    Stack<Vertex<Integer>> stack = new Stack<>();
+    stack.push(vertex);
+
+    int maxVal = Integer.MIN_VALUE;
+    while (!stack.isEmpty()) {
+      Vertex<Integer> current = stack.pop();
+      if (!visited.contains(current)) {
+        visited.add(current);
+        maxVal = Math.max(maxVal, current.data);
+
+        for (Vertex<Integer> neighbor : current.neighbors) {
+          if (!visited.contains(neighbor)) {
+            stack.push(neighbor);
+          }
+        }
+      }
+    }
+    return maxVal;
   }
 
   /**
@@ -58,7 +112,30 @@ public class Practice {
    * @return A set containing all reachable leaf vertices, or an empty set if vertex is null.
    */
   public <T> Set<Vertex<T>> leaves(Vertex<T> vertex) {
-    return null;
+    Set<Vertex<T>> visited = new HashSet<>();
+    if (vertex == null) return visited;
+
+    Stack<Vertex<T>> stack = new Stack<>();
+    stack.push(vertex);
+    Set<Vertex<T>> leafs = new HashSet<>();
+
+    while(!stack.isEmpty()){
+      Vertex<T> current = stack.pop();
+      if(!visited.contains(current)){
+        visited.add(current);
+
+        if (current.neighbors == null || current.neighbors.isEmpty()) {
+          leafs.add(current);
+        } else {
+          for(Vertex<T> neighbor : current.neighbors){
+            if (!visited.contains(neighbor)) {
+              stack.push(neighbor);
+            }
+          }
+        }
+      }
+    }
+    return leafs;
   }
 
   /**
@@ -76,6 +153,24 @@ public class Practice {
    * @throws NullPointerException if either start or end is null.
    */
   public boolean hasStrictlyIncreasingPath(Vertex<Integer> start, Vertex<Integer> end) {
+    if (start == null || end == null) throw new NullPointerException();
+    Stack<Vertex<Integer>> stack = new Stack<>();
+    stack.push(start);
+    Set<Vertex<Integer>> visited = new HashSet<>();
+
+    while(!stack.isEmpty()){
+      Vertex<Integer> current = stack.pop();
+      if (current.equals(end)) return true;
+      if(!visited.contains(current)){
+        visited.add(current);
+
+        for(Vertex<Integer> neighbor : current.neighbors){
+          if (neighbor.data > current.data) {
+            stack.push(neighbor);
+          }
+        }
+      }
+    }
     return false;
   }
 }
