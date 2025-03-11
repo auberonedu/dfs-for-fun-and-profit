@@ -136,7 +136,30 @@ public class Practice {
    *         vertex is null.
    */
   public <T> Set<Vertex<T>> leaves(Vertex<T> vertex) {
-    return null;
+
+    if (vertex == null) {
+      return new HashSet<>();
+    }
+
+    Set<Vertex<T>> visited = new HashSet<>();
+    Set<Vertex<T>> leafSet = new HashSet<>();
+    leavesHelper(vertex, visited, leafSet);
+    return leafSet;
+    }
+
+    private <T> void leavesHelper(Vertex<T> vertex, Set<Vertex<T>> visited, Set<Vertex<T>> leafSet) {
+    if (visited.contains(vertex)) {
+      return;
+    }
+
+    visited.add(vertex);
+    if (vertex.neighbors.isEmpty()) {
+      leafSet.add(vertex);
+    } else {
+      for (var neighbor : vertex.neighbors) {
+        leavesHelper(neighbor, visited, leafSet);
+      }
+    }
   }
 
   /**
@@ -156,6 +179,27 @@ public class Practice {
    * @throws NullPointerException if either start or end is null.
    */
   public boolean hasStrictlyIncreasingPath(Vertex<Integer> start, Vertex<Integer> end) {
+    if (start == null || end == null) {
+      throw new NullPointerException("Start or end vertex cannot be null");
+    }
+
+    Set<Vertex<Integer>> visited = new HashSet<>();
+    return hasStrictlyIncreasingPathHelper(start, end, visited, start.data);
+    }
+
+    private boolean hasStrictlyIncreasingPathHelper(Vertex<Integer> current, Vertex<Integer> end, Set<Vertex<Integer>> visited, int prevValue) {
+    if (current == end) {
+      return true;
+    }
+
+    visited.add(current);
+    for (var neighbor : current.neighbors) {
+      if (!visited.contains(neighbor) && neighbor.data > prevValue) {
+        if (hasStrictlyIncreasingPathHelper(neighbor, end, visited, neighbor.data)) {
+          return true;
+        }
+      }
+    }
     return false;
   }
 }
