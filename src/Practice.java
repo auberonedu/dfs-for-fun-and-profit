@@ -83,7 +83,35 @@ public class Practice {
    * @return A set containing all reachable leaf vertices, or an empty set if vertex is null.
    */
   public <T> Set<Vertex<T>> leaves(Vertex<T> vertex) {
-    return null;
+    Set<Vertex<T>> leaves = new HashSet<>();
+
+    if (vertex == null) return leaves;
+    if (vertex.neighbors.size() == 0) {leaves.add(vertex); return leaves;}
+
+    Set<Vertex<T>> visited = new HashSet<>(); // Set to track each vertice
+    Stack<Vertex<T>> stack = new Stack<>(); // Stack to help traverse through the vertices without overflow issues
+    
+    stack.push(vertex); // The starting point of the traversal
+
+    // While the stack is NOT empty, traverse through all the vertices
+    while(!stack.isEmpty()) {
+      Vertex<T> current = stack.pop(); // Setting a pointer for the current vertex 
+
+      // If the current vertex isn't visited, we'll add to the Set of visited vertices
+      if(!visited.contains(current)) {
+        visited.add(current);
+        
+        if(current.neighbors.size() == 0) {
+          leaves.add(current);
+        }
+
+        // Push all the neighbors to the stack
+        for (Vertex<T> neighbor : current.neighbors) {
+          stack.push(neighbor);
+        }
+      }
+    }
+    return leaves;
   }
 
   /**
