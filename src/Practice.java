@@ -1,3 +1,4 @@
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -18,6 +19,21 @@ public class Practice {
    * @param vertex The starting vertex for the traversal.
    */
   public <T> void printVertexVals(Vertex<T> vertex) {
+    if (vertex == null) return;
+    printVertexValsHelper(vertex, new HashSet<Vertex<T>>());
+
+  }
+
+  private <T> void printVertexValsHelper(Vertex<T> vertex, Set<Vertex<T>> visited) {
+    if (vertex == null) return;
+    if (visited.contains(vertex)) return;
+
+    visited.add(vertex);
+
+    System.out.println(vertex.data);
+    for (Vertex<T> neigbor : vertex.neighbors) {
+      printVertexValsHelper(neigbor, visited);
+    }
   }
 
   /**
@@ -30,7 +46,24 @@ public class Practice {
    * @return A set containing all reachable vertices, or an empty set if vertex is null.
    */
   public <T> Set<Vertex<T>> reachable(Vertex<T> vertex) {
-    return null;
+    if (vertex == null) {
+      return new HashSet<>();
+    }
+
+    Set<Vertex<T>> visited = new HashSet<Vertex<T>>();
+    reachableHelper(vertex, visited);
+
+    return visited;
+  }
+
+  private <T> void reachableHelper(Vertex<T> vertex, Set<Vertex<T>> visited) {
+    if (visited.contains(vertex)) return;
+
+    visited.add(vertex);
+
+    for (Vertex<T> neighbor : vertex.neighbors) {
+      reachableHelper(neighbor, visited);
+    }
   }
 
   /**
@@ -43,7 +76,30 @@ public class Practice {
    * @return The maximum value of any reachable vertex, or Integer.MIN_VALUE if vertex is null.
    */
   public int max(Vertex<Integer> vertex) {
-    return -1;
+    if (vertex == null) {
+      return Integer.MIN_VALUE;
+    }
+
+    Set<Vertex<Integer>> visited = new HashSet<>();
+    return maxHelper(vertex, visited, Integer.MIN_VALUE);
+  }
+
+  public int maxHelper(Vertex<Integer> vertex, Set<Vertex<Integer>> visited, int maxNum) {
+    if (vertex == null) return maxNum;
+    if (visited.contains(vertex)) return maxNum;
+
+    visited.add(vertex);
+    System.out.println(vertex.data);
+
+    if (vertex.data > maxNum) {
+      maxNum = vertex.data;
+    }
+
+    for (var neighbor : vertex.neighbors) {
+      maxNum = maxHelper(neighbor, visited, maxNum);
+    }
+    return maxNum;
+
   }
 
   /**
@@ -58,8 +114,31 @@ public class Practice {
    * @return A set containing all reachable leaf vertices, or an empty set if vertex is null.
    */
   public <T> Set<Vertex<T>> leaves(Vertex<T> vertex) {
-    return null;
+    if (vertex == null) {
+      return new HashSet<>();
+    }
+
+    Set<Vertex<T>> visited = new HashSet<>();
+    Set<Vertex<T>> leaves = new HashSet<>();
+    leavesHelper(vertex, visited, leaves);
+
+    return leaves;
   }
+
+  private <T> void leavesHelper(Vertex<T> vertex, Set<Vertex<T>> visited, Set<Vertex<T>> leaves) {
+
+    if (vertex == null || visited.contains(vertex)) return;
+
+    visited.add(vertex);
+
+    if (vertex.neighbors.isEmpty()) {
+      leaves.add(vertex);
+    }
+
+    for (Vertex<T> neighbor : vertex.neighbors) {
+      leavesHelper(neighbor, visited, leaves);
+    }
+  }     
 
   /**
    * Determines whether there exists a strictly increasing path from the given start vertex
@@ -76,6 +155,33 @@ public class Practice {
    * @throws NullPointerException if either start or end is null.
    */
   public boolean hasStrictlyIncreasingPath(Vertex<Integer> start, Vertex<Integer> end) {
+    if (start == null || end == null) {
+      throw new NullPointerException("start or end is null");
+    }
+    
+    Set<Vertex<Integer>> visited = new HashSet<>();
+    
+    return hasStrictlyIncreasingPathHelper(start, end, visited, Integer.MIN_VALUE); 
+
+  }
+  // got help from tutoring with everrett was not able to solve this problem
+  public boolean hasStrictlyIncreasingPathHelper(Vertex<Integer> start, Vertex<Integer> end, Set<Vertex<Integer>> visited, int lastValue) {
+    if (start == null) return false;
+    if (visited.contains(start)) return false;
+
+    if (start.data <= lastValue) return false;
+
+    if (start == end) return true;
+
+    visited.add(start);
+
+    for (Vertex<Integer> neighbor : start.neighbors) {
+      if (neighbor.data > lastValue) {
+        //if (hasStrictlyIncreasingPathHelper(neighbor, end, visited) {
+          return (hasStrictlyIncreasingPathHelper(neighbor, end, visited, start.data));
+        //}
+      }
+    }
     return false;
   }
 }
