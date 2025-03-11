@@ -91,9 +91,35 @@ public class Practice {
    * @return The maximum value of any reachable vertex, or Integer.MIN_VALUE if vertex is null.
    */
   public int max(Vertex<Integer> vertex) {
-    return -1;
-  }
+    if (vertex == null) return Integer.MIN_VALUE; // Returning the minimum possible int
 
+    Set<Vertex<Integer>> visited = new HashSet<>();
+    Stack<Vertex<Integer>> stack = new Stack<>();
+
+    stack.push(vertex);
+
+    int maxValue = Integer.MIN_VALUE; // Setting the smallest possible int as the max value
+
+    // Traverse through all the reachable vertices
+    while(!stack.isEmpty()) { 
+      Vertex<Integer> current = stack.pop(); // get the next vertex
+
+      // If not visited, add the current to the set
+      if (!visited.contains(current)) {
+        visited.add(current);
+
+        // update the max value
+        maxValue = Math.max(maxValue, current.data);
+
+        // Push all the neighbors on the stack
+        for (Vertex<Integer> neighbor : current.neighbors) {
+          stack.push(neighbor);
+        }
+      }
+    }
+    
+    return maxValue; // return the maximum value found
+  }
   /**
    * Returns a set of all leaf vertices reachable from the given starting vertex.
    * A vertex is considered a leaf if it has no outgoing edges (no neighbors).
