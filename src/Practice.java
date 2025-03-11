@@ -135,7 +135,7 @@ public class Practice {
     Set<Vertex<T>> leaves = new HashSet<>();
 
     if (vertex == null) return leaves;
-    if (vertex.neighbors.size() == 0) {leaves.add(vertex); return leaves;}
+    if (vertex.neighbors.isEmpty()) { leaves.add(vertex); return leaves; }
 
     Set<Vertex<T>> visited = new HashSet<>(); // Set to track each vertice
     Stack<Vertex<T>> stack = new Stack<>(); // Stack to help traverse through the vertices without overflow issues
@@ -150,7 +150,7 @@ public class Practice {
       if(!visited.contains(current)) {
         visited.add(current);
         
-        if(current.neighbors.size() == 0) {
+        if(current.neighbors.isEmpty()) {
           leaves.add(current);
         }
 
