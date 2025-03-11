@@ -23,6 +23,7 @@ public class Practice {
   }
   
   public <T> void printVertexVals(Vertex<T> vertex, Set<Vertex<T>> visited) {
+    // Base case
     if (vertex == null) return;
     if (visited.contains(vertex)) return;
     
@@ -52,6 +53,7 @@ public class Practice {
   }
 
   public <T> void reachableHelper(Vertex<T> vertex, Set<Vertex<T>> visited) {
+    // Base case
     if (vertex == null) return;
     if (visited.contains(vertex)) return;
 
@@ -77,6 +79,7 @@ public class Practice {
   }
   
   public int maxHelper(Vertex<Integer> vertex, Set<Vertex<Integer>> visited) {
+    // Base case
     if (vertex == null) return Integer.MIN_VALUE;
     if (visited.contains(vertex)) return Integer.MIN_VALUE;
 
@@ -104,7 +107,22 @@ public class Practice {
    * @return A set containing all reachable leaf vertices, or an empty set if vertex is null.
    */
   public <T> Set<Vertex<T>> leaves(Vertex<T> vertex) {
-    return null;
+    Set<Vertex<T>> leaf = new HashSet<>();
+    leaves(vertex, new HashSet<>(), leaf);
+    return leaf;
+  }
+  
+  public <T> void leaves(Vertex<T> vertex, Set<Vertex<T>> visited, Set<Vertex<T>> leaf) {
+    // Base case
+    if (vertex == null || visited.contains(vertex)) return;
+
+    visited.add(vertex);
+    
+  if (vertex.neighbors.isEmpty()) leaf.add(vertex);
+
+    for(Vertex<T> neighbor : vertex.neighbors) {
+      leaves(neighbor, visited, leaf);
+    }
   }
 
   /**
@@ -122,6 +140,24 @@ public class Practice {
    * @throws NullPointerException if either start or end is null.
    */
   public boolean hasStrictlyIncreasingPath(Vertex<Integer> start, Vertex<Integer> end) {
+    if (start == null || end == null) throw new NullPointerException("start or end vertex is null");
+    Set<Vertex<Integer>> visited = new HashSet<>();
+    return hasStrictlyIncreasingPath(start, end, visited);
+  }
+
+  private boolean hasStrictlyIncreasingPath(Vertex<Integer> curr, Vertex<Integer> end, Set<Vertex<Integer>> visited) {
+    // Base case: if current vertex and end vertex match, we are done with operation
+    if (curr.equals(end)) return true;
+
+    visited.add(curr);
+
+    for (Vertex<Integer> neighbor : curr.neighbors) {
+      if (neighbor.data > curr.data) {
+        boolean exists = hasStrictlyIncreasingPath(neighbor, end, visited);
+        if (exists) return true;
+      }
+  }
+
     return false;
   }
 }
