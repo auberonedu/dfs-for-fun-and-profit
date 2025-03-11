@@ -127,7 +127,7 @@ public class Practice {
 
   private <T> void leavesHelper(Vertex<T> vertex, Set<Vertex<T>> visited, Set<Vertex<T>> leaves) {
 
-    if (vertex == null) return;
+    if (vertex == null || visited.contains(vertex)) return;
 
     visited.add(vertex);
 
