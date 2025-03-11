@@ -178,6 +178,32 @@ public class Practice {
    * @throws NullPointerException if either start or end is null.
    */
   public boolean hasStrictlyIncreasingPath(Vertex<Integer> start, Vertex<Integer> end) {
+    if (start == null || end == null) throw new NullPointerException(); // Throw this exception if the start or end are null
+    
+    Stack<Vertex<Integer>> stack = new Stack<>(); // create a stack for the traversal of DFS 
+    stack.push(start);                            // push the starting vertice
+    Set<Vertex<Integer>> visited = new HashSet<>(); // store the visited vertices
+
+    // if the stack is not empty, traverse
+    while(!stack.isEmpty()) {
+      Vertex<Integer> current = stack.pop(); // pointer for the stack
+
+      if (current == end) return true; // if the current path is strictly longer as the end return true
+      
+      // if the current visited doesn't contain the current vertice, add to the visited
+      if (!visited.contains(current)) { 
+        visited.add(current);
+
+        // For each neighbor of the current pointer neighbors. Check if the not visited vertices contains the neighbor,
+        // and the neighbor data is greater than the current data. Push that neighbor 
+        for (Vertex<Integer> neighbor : current.neighbors) {
+          if (!visited.contains(neighbor) && neighbor.data > current.data) {
+            stack.push(neighbor);
+          }
+        }
+      }
+    }
+
     return false;
   }
 }
