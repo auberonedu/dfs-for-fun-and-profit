@@ -168,7 +168,7 @@ public class Practice {
    * @throws NullPointerException if either start or end is null.
    */
   public boolean hasStrictlyIncreasingPath(Vertex<Integer> start, Vertex<Integer> end) {
-    return hasStrictlyIncreasingPath(start, end);
+    return hasStrictlyIncreasingPathHelper(start, end, new HashSet<Vertex<Integer>>());
   }
 
   public boolean hasStrictlyIncreasingPathHelper(Vertex<Integer> start, Vertex<Integer> end, Set<Vertex<Integer>> visited){
@@ -179,7 +179,7 @@ public class Practice {
 
     // if start and end are equal, the path is not increasing
     if(start.equals(end)){
-      return false;
+      return true;
     }
 
     //add start to set to mark as visisted
