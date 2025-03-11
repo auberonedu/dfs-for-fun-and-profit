@@ -1,3 +1,4 @@
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -18,6 +19,16 @@ public class Practice {
    * @param vertex The starting vertex for the traversal.
    */
   public <T> void printVertexVals(Vertex<T> vertex) {
+    printVertexVals(vertex, new HashSet<Vertex<T>>());
+  }
+
+  private <T> void printVertexVals(Vertex<T> vertex, Set<Vertex<T>> visited){
+    if (vertex == null || !visited.add(vertex)) return;
+
+    System.out.println(vertex.data);
+    for (var neighbor : vertex.neighbors){
+      printVertexVals(neighbor, visited);
+    }
   }
 
   /**
@@ -30,7 +41,17 @@ public class Practice {
    * @return A set containing all reachable vertices, or an empty set if vertex is null.
    */
   public <T> Set<Vertex<T>> reachable(Vertex<T> vertex) {
-    return null;
+    return reachable(vertex, new HashSet<Vertex<T>>());
+  }
+
+  private <T> Set<Vertex<T>> reachable(Vertex<T> vertex, Set<Vertex<T>> reached){
+    if (vertex == null || !reached.add(vertex)) return reached;
+
+    for (var neighbor : vertex.neighbors){
+      reached = reachable(neighbor, reached);
+    }
+
+    return reached;
   }
 
   /**
@@ -43,7 +64,28 @@ public class Practice {
    * @return The maximum value of any reachable vertex, or Integer.MIN_VALUE if vertex is null.
    */
   public int max(Vertex<Integer> vertex) {
-    return -1;
+    int max = Integer.MIN_VALUE;
+    Set<Vertex<Integer>> visited = new HashSet<>();
+    return max(vertex, max, visited);
+  }
+
+  private int max(Vertex<Integer> vertex, int max, Set<Vertex<Integer>> visited) {
+    // base case
+    if (vertex == null || !visited.add(vertex)) return max;
+
+
+    // recurse
+    for (var neighbor : vertex.neighbors){
+      max = max(neighbor, max, visited);
+    }
+
+    // set max
+    if(vertex.data > max) max = vertex.data;
+
+    
+    return max;
+
+
   }
 
   /**
@@ -58,8 +100,27 @@ public class Practice {
    * @return A set containing all reachable leaf vertices, or an empty set if vertex is null.
    */
   public <T> Set<Vertex<T>> leaves(Vertex<T> vertex) {
-    return null;
+    Set<Vertex<T>> leaves = new HashSet<>();
+    Set<Vertex<T>> visited = new HashSet<>();
+    return leaves(vertex, leaves, visited);
   }
+
+  private <T> Set<Vertex<T>> leaves(Vertex<T> vertex, Set<Vertex<T>> leaves, Set<Vertex<T>> visited){
+    // base case - vertex is null, vertex visited before
+    if (vertex == null || !visited.add(vertex)) return leaves;
+
+    // check and add to leaves
+    if (vertex.neighbors.isEmpty()) leaves.add(vertex);
+    
+    // recurse
+    for (var neighbor : vertex.neighbors){
+      leaves = leaves(neighbor, leaves, visited);
+    }
+
+    return leaves;
+  }
+
+
 
   /**
    * Determines whether there exists a strictly increasing path from the given start vertex
@@ -76,6 +137,28 @@ public class Practice {
    * @throws NullPointerException if either start or end is null.
    */
   public boolean hasStrictlyIncreasingPath(Vertex<Integer> start, Vertex<Integer> end) {
-    return false;
+    Set<Vertex<Integer>> visited = new HashSet<>();
+    return hasStrictlyIncreasingPath(start, end, visited);
   }
+
+  private boolean hasStrictlyIncreasingPath(Vertex<Integer> start, Vertex<Integer> end, Set<Vertex<Integer>> visited){
+    boolean valid = false;
+    // base case - start or end is null
+    if (start == null || end == null) throw new NullPointerException();
+
+    if (!visited.add(start)) return true;
+
+    // base case - reached end
+    if (start == end) return true;
+      
+    // check if current is smaller than neighbors, then recurse
+    for (var neighbor : start.neighbors){
+      if (start.data < neighbor.data) valid = true;
+      valid = hasStrictlyIncreasingPath(neighbor, end, visited);
+    }
+
+    return valid;
+
+  }
+
 }
