@@ -4,6 +4,7 @@ import java.util.List;
 public class Vertex<T> {
   T data;
   List<Vertex<T>> neighbors;
+  public char[] value;
 
   public Vertex(T data) {
     this(data, new ArrayList<>());
