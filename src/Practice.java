@@ -1,4 +1,5 @@
 import java.util.Set;
+import java.util.HashSet;
 
 /**
  * A utility class providing various graph traversal methods using DFS.
@@ -76,6 +77,36 @@ public class Practice {
    * @throws NullPointerException if either start or end is null.
    */
   public boolean hasStrictlyIncreasingPath(Vertex<Integer> start, Vertex<Integer> end) {
+    if(start == null || end == null) throw new NullPointerException("Start and end must be non-null");
+
+    if(start == end) return true;
+    if(start.neighbors == null) return false;
+
+    for(Vertex<Integer> neighbor : start.neighbors) {
+      if(neighbor.data > start.data) {
+        if(hasStrictlyIncreasingPath(neighbor, end)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  private boolean hasStrictlyIncreasingPath(Vertex<Integer> start,
+                                            Vertex<Integer> end,
+                                            Set<Vertex<Integer>> visited) {
+    if(start == end) return true;
+    if(start.neighbors == null || visited.contains(start)) return false;
+
+    visited.add(start);
+
+    for(Vertex<Integer> neighbor : start.neighbors) {
+      if(neighbor.data > start.data) {
+        if(hasStrictlyIncreasingPath(neighbor, end, visited)) {
+          return true;
+        }
+      }
+    }
     return false;
   }
 }
